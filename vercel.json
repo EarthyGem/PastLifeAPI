@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "Package.swift", "use": "@vercel/static-build", "config": { "distDir": "Public" } }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/Public/$1" }
+  ]
+}
