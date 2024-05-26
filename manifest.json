@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Nodal Details API",
+  "name_for_model": "nodal_details_api",
+  "description_for_human": "Get nodal details based on date, time, latitude, and longitude.",
+  "description_for_model": "A service to retrieve nodal details based on provided date, time, latitude, and longitude.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": " https://c8ff-209-222-126-192.ngrok-free.app/openapi.yaml",
+    "is_user_authenticated": false
+  },
+  "logo_url": " https://c8ff-209-222-126-192.ngrok-free.app/logo.png",
+  "contact_email": "support@example.com",
+  "legal_info_url": "http://example.com/legal"
+}

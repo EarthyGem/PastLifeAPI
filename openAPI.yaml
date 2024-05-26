@@ -1,0 +1,64 @@
+openapi: 3.0.0
+info:
+  title: Planetary API
+  description: API to get nodal details based on date, time, latitude, and longitude.
+  version: 1.0.0
+servers:
+  - url: https://2e76-209-222-126-192.ngrok-free.app
+    description: Local server
+paths:
+  /planets/nodal-details:
+    get:
+      operationId: getNodalDetails
+      summary: Get Nodal Details
+      description: Returns the nodal details based on the provided date, time, latitude, and longitude.
+      parameters:
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Date in ISO 8601 format (YYYY-MM-DD)
+        - name: time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: time
+          description: Time in ISO 8601 format (HH:MM:SS)
+        - name: lat
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+          description: Latitude of the location
+        - name: lon
+          in: query
+          required: true
+          schema:
+            type: number
+            format: float
+          description: Longitude of the location
+      responses:
+        "200":
+          description: Nodal details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  configuration:
+                    type: string
+        "400":
+          description: Bad Request, e.g., missing or invalid parameters
+        "500":
+          description: Internal Server Error
+components:
+  schemas:
+    NodalResponse:
+      type: object
+      properties:
+        configuration:
+          type: string
