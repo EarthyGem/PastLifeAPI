@@ -1,24 +1,35 @@
-import NIOSSL
-import Fluent
-import FluentPostgresDriver
 import Vapor
+import NIOSSL
 
-// configures your application
-public func configure(_ app: Application) async throws {
-    // Serve files from /Public folder
-    app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+public func configure(_ app: Application) throws {
+    app.logger.info("Starting configuration")
 
-    app.databases.use(DatabaseConfigurationFactory.postgres(configuration: .init(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database",
-        tls: .prefer(try .init(configuration: .clientDefault)))
-    ), as: .psql)
+    let certPath = "/Users/administrator/pastlifeapi/lilaastrology.com.crt"
+    let keyPath = "/Users/administrator/pastlifeapi/lilaastrology.com.key"
 
-    app.migrations.add(CreateTodo())
-    
+    app.logger.info("Using certPath: \(certPath)")
+    app.logger.info("Using keyPath: \(keyPath)")
+
+    do {
+        let certificates = try NIOSSLCertificate.fromPEMFile(certPath)
+        let privateKey = try NIOSSLPrivateKey(file: keyPath, format: .pem)
+
+        app.logger.info("Certificates and private key successfully loaded")
+
+        let configuration = TLSConfiguration.makeServerConfiguration(
+            certificateChain: certificates.map { .certificate($0) },
+            privateKey: .privateKey(privateKey)
+        )
+
+        app.http.server.configuration.tlsConfiguration = configuration
+    } catch {
+        app.logger.critical("Failed to load SSL certificates: \(error)")
+        throw error
+    }
+
+    app.http.server.configuration.hostname = "0.0.0.0"
+    app.http.server.configuration.port = 443
+
     // Register routes
     try routes(app)
 }

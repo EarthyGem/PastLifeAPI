@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "PastLifeAPI",
+    name: "PastlifeAPI",
     platforms: [
        .macOS(.v13)
     ],
@@ -20,6 +20,13 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
+            name: "Run",
+            dependencies: [
+                .target(name: "App")
+            ],
+            path: "Sources/Run"
+        ),
+        .target(
             name: "App",
             dependencies: [
                 .product(name: "Vapor", package: "vapor"),
@@ -29,7 +36,7 @@ let package = Package(
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "FluentPostgresDriver", package: "fluent-postgres-driver")
             ],
-            swiftSettings: swiftSettings
+            path: "Sources/App"
         ),
         .testTarget(
             name: "AppTests",
